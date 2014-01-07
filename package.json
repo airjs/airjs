@@ -1,0 +1,36 @@
+{
+  "name": "airjs",
+  "version": "0.0.1",
+  "description": "轻量级、可定制、跨平台的新一代前端类库",
+  "keywords": [
+    "javasript framework",
+    "Node.js",
+    "js library"
+  ],
+  "author": {
+    "name": "airjs",
+    "email": "discuss@airjs.org",
+    "url": "http://www.airjs.org/"
+  },
+  "homepage": "http://www.airjs.org/",
+  "repository": {
+    "type": "git",
+    "url": "https://gitub.com/airjs"
+  },
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.0.0"
+  },
+  "dependencies": {
+    "iconv-lite": "0.2.11",
+    "rimraf": "2.2.2",
+    "seajs": "1.2.1"
+  },
+  "devDependencies": {},
+  "bundleDependencies": [],
+  "main": "lib.js",
+  "readme": "ERROR: No README data found!",
+  "dist": {
+    "shasum": "030864265ddfb03168d27da44f64dd6cfab2eb92"
+  }
+}

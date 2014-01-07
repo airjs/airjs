@@ -1,0 +1,66 @@
+var http = require('http');
+var fs = require('fs');
+
+var clearOpt = {
+    host: '10.1.30.43',
+    port: 7777,
+    path: '/fs/rm/?path=/data/svn/lib/'
+};
+
+var svnOpt = {
+    host: 'api.qiyife.com',
+    port: 80,
+    path: '/svn/co?url=https://scm.qiyi.domain:18080/svn/RIA/RIA/lib/src/browser/trunk&path=/data/svn/lib'
+};
+
+var downOpt = {
+    host: '10.1.30.43',
+    port: 7777,
+    path: '/spm/?codepath=/data/svn/lib/lib.js&isdown=true&compress=true&removesea=true'
+};
+
+console.log('getting compressed & removed seajs\'s lib.js...');
+
+http.get(clearOpt, function(res1) {
+    res1.on('data', function (body1) {
+        if((body1 + '') == '{"code":"A00000"}'){
+            http.get(svnOpt, function(res2) {
+                res2.on('data', function (body2) {
+                    if((body2 + '') == '{"code":"A00000"}'){
+                        http.get(downOpt, function(res3) {
+                            var string = '';
+                            res3.on('data', function (body3) {
+                                string += body3;
+                            });
+                            res3.on('end', function (body3) {
+                                if(body3){
+                                    string += body3;
+                                }
+                                combine(string);
+                                console.log('getting lib.js success!');
+                            });
+                        })
+                    }
+                })
+            })
+        }
+    });
+});
+
+var combine = function(code){
+    var ver = process.argv[2] || '';
+    var repeatTestStart = fs.readFileSync('repeatTestStart') + '';
+    console.log('getting sea.js (ver:' + ver + ')...');
+    var seaOriginal = fs.readFileSync('seaOriginal' + ver + '.js') + '';
+    console.log('getting pluginInit.js ...');
+    var pluginInit = (fs.readFileSync('pluginInit.js') + '').replace('seajs.use(liburl, callback || function() {});','callback();');
+    console.log('getting player.js ...');
+    var player = fs.readFileSync('player.js');
+    var repeatTestEnd = fs.readFileSync('repeatTestEnd') + '';
+    if(fs.existsSync('sea' + ver + '.js')){
+        fs.unlinkSync('sea' + ver + '.js')
+    }
+    console.log('combining sea.js...');
+    fs.writeFileSync('sea' + ver + '.js', [repeatTestStart,seaOriginal,code,pluginInit,player,repeatTestEnd].join('\r\n'), encoding='utf8');
+    console.log('combine success!');
+}
